@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{student/base::layout(~{::section})}">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" th:href="@{/chat-app/css/chat-app.css}">
+	<title>chat app</title>
+
+</head>
+
+<body>
+	<section>
+		<div class="container-fluid">
+			<h6 class="mb-0 me-3" th:text="${user.id}" id="unique-name" style="display: none;"></h6>
+			<div class="row chat-section">
+				<!-- ///////////////////////////////////////////Rename While Adding Friend/////////////////////////////////////// -->
+				<div class="modal fade" id="user-rename-model" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+					aria-labelledby="userrenamemodelLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="userrenamemodelLabel">Save as
+									User</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+									id="close-add-user-model"></button>
+							</div>
+							<div class="modal-body">
+		
+								<div class="mb-3">
+									<label for="rename-user" class="form-label">Rename</label> <input class="form-control"
+										type="text" id="rename-user">
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" id="add-to-friend-list" class="btn btn-primary">Add friend</button>
+							</div>
+						</div>
+					</div>
+				</div>
+		
+				<!-- ///////////////////////////////////////////////Again Rename User//////////////////////////////////////////////////////////// -->
+				<div class="modal fade" id="again-rename-model" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+					aria-labelledby="userrenamemodelLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="againrenamemodelLabel">Rename
+									User</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+									id="close-rename-user-model"></button>
+							</div>
+							<div class="modal-body">
+		
+								<div class="mb-3">
+									<label for="again-rename-user" class="form-label">Rename</label>
+									<input class="form-control" type="text" id="again-rename-user">
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" id="again-rename-user-btn" class="btn btn-primary">Rename</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- /////////////////////////////////////Handle Notification details//////////////////////////////////////////////////// -->
+				<div class="modal fade" id="handle-notification-details" data-bs-backdrop="static" data-bs-keyboard="false"
+					tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+		
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div id="notify-modal-header"
+									class="d-flex align-items-center bg-primary px-2 rounded shadow mb-3">
+									<div class="me-2">
+										<img th:src="@{/assets/img_avatar.png}" alt=""
+											th:attr="data-user=${user.id}" width="45px" height="45px"
+											style="border-radius: 50%;" id="notify-modal-img">
+									</div>
+									<h5 id="notify-modal-name"></h5>
+								</div>
+								<div id="notify-modal-body" class="notify-message-section"></div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" id="block-new-friend" class="btn btn-danger">Block</button>
+								<button type="button" id="unblock-new-friend" class="btn btn-success fade-model">Unblock</button>
+								<button type="button" id="save-new-friend-from-notification" class="btn btn-primary">Add Friend</button>
+							</div>
+						</div>
+					</div>
+				</div>
+		
+				<div class="col-10 chat m-auto shadow" id="chat-templete">
+					<div class="row">
+						<div class="col-xs-2 col-sm-4 col-md-3 p-0 border border-1 d-flex flex-column justify-content-between" id="friend-sidebr">
+							<div class="friends-selection-section">
+								<ul class="mb-2" id="friend-list" style="list-style: none; padding-left: 0; margin-bottom: 0;">
+		
+		
+								</ul>
+								<ul class="mb-2" id="not-friend-list"
+									style="list-style: none; padding-left: 0; margin-bottom: 0;">
+		
+		
+								</ul>
+							</div>
+							<div class="change-users-view">
+								<div class="row m-0">
+									<div class="col-6 border border-1 text-center" id="not-my-friends" style="cursor: pointer;">
+										<h5>
+											<i class="fa-solid fa-user-plus"></i>
+										</h5>
+									</div>
+									<div class="col-6 border border-1 text-center" id="my-friends" style="cursor: pointer;">
+										<h5>
+											<i class="fa-solid fa-user-group"></i>
+										</h5>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-8 col-md-9 border border-1 p-0" id="chat-main">
+							<div class="message-section-header d-flex align-items-center justify-content-between px-3"
+								style="position: relative;" id="message-header-templete">
+								<div>
+									<img th:src="@{/assets/img_avatar.png}" alt="" width="40px" height="40px"
+										style="border-radius: 50%;" id="message-header-profile-pic" class="hide-element"> <small
+										id="message-header-label"> </small>
+								</div>
+							</div>
+							<div class="message-section" id="section-of-message">
+		
+							</div>
+							<div class="message-input-section cstm-shadow fade-model" id="message-input-templete">
+								<form action="" class="d-flex align-items-center" id="submit-message">
+									<input type="text" class="form-control w-60 me-2 my-1 ms-5" name="message" id="message-area"
+										required placeholder="Type a message">
+									<button type="submit" class="btn btn-primary-outline me-2">
+										<i class="fa-solid fa-paper-plane"></i>
+									</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+
+</html>

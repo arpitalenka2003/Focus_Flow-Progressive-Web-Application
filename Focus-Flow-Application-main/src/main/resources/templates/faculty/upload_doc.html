@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{faculty/base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Focus Flow</title>
+</head>
+<body>
+	<section>
+		<div th:if="${session.upload_doc_msg}">
+			<script th:inline="javascript">
+				$(document).ready(function() {
+					toastr.options.positionClass = 'custom-toast-placement';
+					if ([[${session.upload_doc_msg.type}]] == "danger") {
+						toastr.error([[${session.upload_doc_msg.content}]]);
+					} else {
+						toastr.success([[${session.upload_doc_msg.content}]]);
+					}
+				});							
+			</script>
+			<span th:remove="${#session.removeAttribute('upload_doc_msg')}"></span>
+		</div>
+		<div class="container-fluid py-5 h-100">
+			<div class="row d-flex justify-content-center align-items-center h-100">
+				<div class="col">
+				<div class="card card-registration my-4">
+					<div class="row g-0">
+					<div class="col-xl-12">
+						<div class="card-body p-md-4 text-black">
+							<h3 class="mb-4">Document Upload Form</h3>
+							<div th:if="${session.upload_doc_msg}" th:classappend="${'alert-'+session.upload_doc_msg.type}" class="alert alert-success text-center" role="alert">
+								<span th:text="${session.upload_doc_msg.content}"></span>
+								<span th:remove="${#session.removeAttribute('upload_doc_msg')}"></span>
+							</div>
+							<form class="was-validated" th:action="@{/faculty/doc/upload-doc}" method="post" th:object="${docDto}" enctype="multipart/form-data">
+								<div class="row">
+									<div class="col-md-4">
+										<div class="form-outline mb-1 required">
+										<label for="branch" class="form-label">Branch</label>
+										<select class="form-control" name="branch" id="branch" required>
+											<option value="">Choose...</option>
+											<option value="Computer(CSE)">Computer(CSE)</option>
+											<option value="Mechanical">Mechanical</option>
+											<option value="ISE">ISE</option>
+											<option value="ECE">ECE</option>
+											<option value="Civil">Civil</option>
+											<option value="Automobile">Automobile</option>
+											<option value="Aeronautical">Aeronautical</option>
+										</select>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-outline mb-1 required">
+										<label for="semester" class="form-label">Semester</label>
+										<select class="form-control" name="semester" id="semester" required>
+											<option value="">Choose...</option>
+											<option value="SE-1">SE-1</option>
+											<option value="SE-2">SE-2</option>
+											<option value="SE-3">SE-3</option>
+											<option value="SE-4">SE-4</option>
+											<option value="SE-5">SE-5</option>
+											<option value="SE-6">SE-6</option>
+											<option value="SE-7">SE-7</option>
+											<option value="SE-8">SE-8</option>
+										</select>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<div class="form-outline mb-1 required">
+											<label for="subject" class="form-label">Subject</label>
+											<input type="text" id="subject" name="course" class="form-control" required/>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-outline mb-1">
+											<label for="description" class="form-label">Description</label>
+											<input type="text" id="description" name="description" class="form-control" />
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-outline required">
+											<label class="form-label">Select Documents</label>									
+											<div class="custom-file">
+												<input type="file" class="custom-file-input" id="customFile" name="documents" multiple required accept="application/pdf,text/plain" />
+												<label class="custom-file-label" for="customFile">Choose Documents</label>
+											</div>
+										</div>	
+									</div>
+								</div>
+				
+								<div class="d-flex justify-content-end pt-3">
+									<input type="submit" name="submit" class="btn btn-warning ms-2" value="Upload">
+								</div>
+							</form>
+						</div>
+					</div>
+					</div>
+				</div>
+				</div>
+			</div>
+		</div>
+		<script th:inline="javascript">
+			$(".custom-file-input").on("change", function() {
+				var fileName = $(this).val().split("\\").pop();
+				$(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+			});
+		</script>
+	</section>
+</body>
+</html>

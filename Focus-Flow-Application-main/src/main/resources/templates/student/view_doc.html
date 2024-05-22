@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{student/base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<section>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class ="card">
+						<div class="card-body">
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">Id</th>
+										<th scope="col">Branch</th>
+										<th scope="col">Semester</th>
+										<th scope="col">Course</th>
+										<th scope="col">Description</th>
+										<th scope="col">Document</th>
+										<th scope="col"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="u : ${docs}">
+										<th scope="row" th:text="${u.id}">1</th>
+										<td th:text="${u.branch}"></td>
+										<td th:text="${u.semester}"></td>
+										<td th:text="${u.course}">@</td>
+										<td th:text="${u.description}">@</td>
+										<td>						
+											<span th:if="${#strings.substringAfter(u.fileName,'.') == 'pdf'}" ><i class="fa-solid fa-file-pdf" style="color:#f40f02"></i></span>
+											<span th:if="${#strings.substringAfter(u.fileName,'.') == 'docx' || #strings.substringAfter(u.fileName,'.') == 'doc'}" ><i class="fa-solid fa-file-word" style="color:#2b579a"></i></span>
+											<span th:if="${#strings.substringAfter(u.fileName,'.') == 'xls'}" ><i class="fa-solid fa-file-excel" style="color:#217346"></i></span>
+											<span th:if="${#strings.substringAfter(u.fileName,'.') == 'csv'}" ><i class="fa-solid fa-file-csv" style="color:#217346"></i></span>
+											<span th:if="${#strings.substringAfter(u.fileName,'.') == 'txt'}" ><i class="fa-solid fa-file-lines"></i></span>
+											<span th:if="${#strings.substringAfter(u.fileName,'.') == 'ppt' || #strings.substringAfter(u.fileName,'.') == 'pptx'}" ><i class="fa-solid fa-file-powerpoint" style="color:#d24726"></i></span>
+											<a th:href="@{'/student/doc/open/'+${u.id}}"><span th:text="${u.fileName}"></span></a>
+										</td>
+										<td>
+											<a th:href="@{'/student/doc/download/'+${u.id}}" class="mr-3" data-toggle="tooltip" data-placement="top" title="Download"><i class="fa-solid fa-download" style="color:blue"></i></a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- pagination part -->
+							<nav aria-label="Page navigation example" th:classappend="${totalPages==0?'d-none':''}">
+								<ul class="pagination">
+									<li th:if="${currentPage != 0}" class="page-item">
+										<a th:href="@{'/student/doc/view/'+${currentPage-1}}" class="page-link" href="#" aria-label="Previous">
+											<span aria-hidden="true">&laquo;</span>
+											<span class="sr-only">Previous</span>
+										</a>
+									</li>
+									
+									<li th:classappend="${currentPage==i-1?'active':''}" th:each="i : ${#numbers.sequence(1,totalPages)}" class="page-item">
+										<a th:href="@{'/student/doc/view/'+${i-1}}" class="page-link" href="#"><span th:text="${i}"></span></a>
+									</li>
+									
+									<li th:if="${currentPage+1 != totalPages}" class="page-item">
+										<a th:href="@{'/student/doc/view/'+${currentPage+1}}" class="page-link" href="#" aria-label="Next">
+											<span aria-hidden="true">&raquo;</span>
+											<span class="sr-only">Next</span>
+										</a>
+									</li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

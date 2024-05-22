@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{admin/base::layout(~{::section})}">
+
+<head>
+	<meta charset="UTF-8">
+	<title th:text="${title}">Admin - Dashboard</title>
+</head>
+
+<body>
+	<section class="h-100">
+		<div th:if="${session.registerResponse}">
+			<script th:inline="javascript">
+				$(document).ready(function () {
+					toastr.options.positionClass = 'custom-toast-placement';
+					if ([[${session.registerResponse.type}]] == "danger") {
+						toastr.error([[${session.registerResponse.content}]]);
+					} else {
+						toastr.success([[${session.registerResponse.content}]]);
+					}
+				});							
+			</script>
+			<span th:remove="${#session.removeAttribute('registerResponse')}"></span>
+		</div>
+		<div class="container py-5 h-100">
+			<div class="row d-flex justify-content-center align-items-center h-100">
+				<div class="col">
+					<div class="card card-registration my-4">
+						<div class="row g-0">
+							<div class="col-xl-12">
+								<div class="card-body p-md-4 text-black">
+									<h3 class="mb-4">User Registration Form</h3>
+									<form th:action="@{/admin/do_register}" method="post" th:object="${userDto}">
+										<div class="row">
+											<div class="col-md-6 mb-4">
+												<div class="form-outline required">
+													<label class="form-label" for="firstName">First Name</label>
+													<input type="text" id="firstName" name="firstName"
+														required="required"
+														th:classappend="${#fields.hasErrors('firstName') ? 'is-invalid':''}"
+														class="form-control form-control-lg"
+														th:value="${userDto.firstName}" />
+													<div class="invalid-feedback"
+														th:each="e : ${#fields.errors('firstName')}" th:text="${e}">
+													</div>
+												</div>
+											</div>
+											<div class="col-md-6 mb-4">
+												<div class="form-outline required">
+													<label class="form-label" for="lastName">Last Name</label>
+													<input type="text" id="lastName" name="lastName" required="required"
+														th:classappend="${#fields.hasErrors('lastName') ? 'is-invalid':''}"
+														class="form-control form-control-lg"
+														th:value="${userDto.lastName}" />
+													<div class="invalid-feedback"
+														th:each="e : ${#fields.errors('lastName')}" th:text="${e}">
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-6 mb-4">
+												<div class="form-outline">
+													<label class="form-label" for="givenName">Given Name</label>
+													<input type="text" id="givenName" name="givenName"
+														class="form-control form-control-lg"
+														th:value="${userDto.givenName}" />
+												</div>
+											</div>
+											<div class="col-md-6 mb-4">
+												<div class="form-outline required">
+													<label class="form-label" for="userName">User Name</label>
+													<input type="text" id="userName" name="userName" required="required"
+														th:classappend="${#fields.hasErrors('userName') ? 'is-invalid':''}"
+														class="form-control form-control-lg"
+														th:value="${userDto.userName}" />
+													<div class="invalid-feedback"
+														th:each="e : ${#fields.errors('userName')}" th:text="${e}">
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-6 mb-4">
+												<div class="form-outline">
+													<label class="form-label" for="phoneNo">Phone No</label>
+													<input type="text" id="phoneNo" name="phoneNo"
+														th:classappend="${#fields.hasErrors('phoneNo') ? 'is-invalid':''}"
+														class="form-control form-control-lg"
+														th:value="${userDto.phoneNo}" />
+													<div class="invalid-feedback"
+														th:each="e : ${#fields.errors('phoneNo')}" th:text="${e}"></div>
+												</div>
+											</div>
+											<div class="col-md-6 mb-4">
+												<div class="form-outline">
+													<label class="form-label" for="emailId">Email ID</label>
+													<input type="mail" id="emailId" name="emailId"
+														th:classappend="${#fields.hasErrors('emailId') ? 'is-invalid':''}"
+														class="form-control form-control-lg"
+														th:value="${userDto.emailId}" />
+													<div class="invalid-feedback"
+														th:each="e : ${#fields.errors('emailId')}" th:text="${e}"></div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-6 mb-4">
+												<div class="form-outline">
+													<label class="form-label" for="password">Password</label>
+													<input type="password" id="password" name="password"
+														required="required"
+														th:classappend="${#fields.hasErrors('password') ? 'is-invalid':''}"
+														class="form-control form-control-lg"
+														th:value="${userDto.password}" />
+													<div class="invalid-feedback"
+														th:each="e : ${#fields.errors('password')}" th:text="${e}">
+													</div>
+												</div>
+											</div>
+											<div class="col-md-6 mb-4">
+												<div class="form-outline">
+													<label class="form-label" for="confirmPwd">Confirm Password</label>
+													<input type="password" id="confirmPwd" name="confirmPwd"
+														required="required"
+														th:classappend="${#fields.hasErrors('confirmPwd') ? 'is-invalid':''}"
+														class="form-control form-control-lg"
+														th:value="${userDto.confirmPwd}" />
+													<div class="invalid-feedback"
+														th:each="e : ${#fields.errors('confirmPwd')}" th:text="${e}">
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="d-md-flex mb-4 py-2">
+											<h6 class="mb-0 me-4 mr-3">Gender: </h6>
+											<div class="custom-control custom-radio custom-control-inline">
+												<input type="radio" id="femaleGender" name="gender"
+													class="custom-control-input" required>
+												<label class="custom-control-label" for="femaleGender">Female</label>
+											</div>
+											<div class="custom-control custom-radio custom-control-inline">
+												<input type="radio" id="maleGender" name="gender"
+													class="custom-control-input" required>
+												<label class="custom-control-label" for="maleGender">Male</label>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-4 mb-4">
+												<label for="branch" class="form-label">Branch</label>
+												<select class="form-select"
+													th:classappend="${#fields.hasErrors('branch') ? 'is-invalid':''}"
+													name="branch" id="branch" required>
+													<option value="">Choose...</option>
+													<option value="Computer(CSE)">Computer(CSE)</option>
+													<option value="Mechanical">Mechanical</option>
+													<option value="ISE">ISE</option>
+													<option value="ECE">ECE</option>
+													<option value="Civil">Civil</option>
+													<option value="Automobile">Automobile</option>
+													<option value="Aeronautical">Aeronautical</option>
+												</select>
+												<div class="invalid-feedback" th:each="e : ${#fields.errors('branch')}"
+													th:text="${e}"></div>
+											</div>
+											<div class="col-md-4 mb-4">
+												<label for="semester" class="form-label">Semester</label>
+												<select class="form-select" name="semester" id="semester">
+													<option value="">Choose...</option>
+													<option value="SE-1">SE-1</option>
+													<option value="SE-2">SE-2</option>
+													<option value="SE-3">SE-3</option>
+													<option value="SE-4">SE-4</option>
+													<option value="SE-5">SE-5</option>
+													<option value="SE-6">SE-6</option>
+													<option value="SE-7">SE-7</option>
+													<option value="SE-8">SE-8</option>
+												</select>
+											</div>
+											<div class="col-md-4 mb-4">
+												<label for="role" class="form-label">Role</label>
+												<select class="form-select"
+													th:classappend="${#fields.hasErrors('role') ? 'is-invalid':''}"
+													name="role" id="role" required>
+													<option value="">Choose...</option>
+													<option value="Faculty">Faculty</option>
+													<option value="Student">Student</option>
+												</select>
+												<div class="invalid-feedback" th:each="e : ${#fields.errors('role')}"
+													th:text="${e}"></div>
+											</div>
+										</div>
+
+										<div class="d-flex justify-content-end pt-3">
+											<input type="submit" name="submit" class="btn btn-warning btn-lg ms-2"
+												value="Register">
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+
+</html>

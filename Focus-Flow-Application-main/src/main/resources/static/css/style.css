@@ -1,0 +1,189 @@
+@charset "UTF-8";
+
+body {
+	background: #e2e2e2 !important;
+}
+
+.bg-primary {
+	background: #0d8373 !important;
+}
+
+#login .container #login-row #login-column #login-box {
+	margin-top: 20px;
+	border: 1px solid #9C9C9C;
+	background-color: white;
+}
+
+#login .container #login-row #login-column #login-box #login-form {
+	padding: 20px;
+}
+
+#login .container #login-row #login-column #login-box #login-form #register-link {
+	margin-top: -85px;
+}
+
+.card-registration .select-input.form-control[readonly]:not([disabled]) {
+	font-size: 1rem;
+	line-height: 2.15;
+	padding-left: .75em;
+	padding-right: .75em;
+}
+
+.card-registration .select-arrow {
+	top: 13px;
+}
+
+#form-check-gender {
+	display: inline-flex;
+	align-items: center;
+}
+
+.form-outline.required .form-label:after {
+	content: "*";
+	color: red;
+}
+
+@media only screen and(max-width: 600px) {
+	.sidebar {
+		display: none;
+		width: 80% !important;
+		background-color: white;
+		height: 100vh;
+		position: fixed;
+		padding-top: 20px;
+	}
+
+	.content {
+		margin-left: 0% !important;
+	}
+}
+
+.sidebar {
+	width: 18%;
+	background-color: white;
+	height: 100%;
+	position: fixed;
+	padding-top: 45px;
+}
+
+.sidebar a {
+	display: block;
+	width: 100%;
+	padding: 10px 25px;
+	text-decoration: none;
+	color: gray;
+}
+
+.sidebar a:hover {
+	background-color: #e2e2e2;
+}
+
+.sidebar .divider {
+	height: .5px;
+	width: 100%;
+	background-color: #e2e2e2;
+	margin-top: 10px;
+}
+
+.sidebar .crossBtn {
+	position: absolute;
+	top: 0;
+	right: 35px;
+	font-size: 36px;
+	cursor: pointer;
+}
+
+.content {
+	margin-left: 20%;
+}
+
+/* Assignment */
+
+.assignment-container {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 20px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	background-color: #f9f9f9;
+}
+
+.assignment {
+	margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	box-sizing: border-box;
+}
+
+.mcq-container {
+	margin-bottom: 10px;
+}
+
+.mcq-option {
+	display: flex;
+}
+
+.mcq-option input[type="text"] {
+	flex: 1;
+	margin-right: 10px;
+}
+
+.btn-submit {
+	background-color: #4CAF50;
+	color: white;
+	padding: 14px 20px;
+	margin-top: 10px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.btn-submit:hover {
+	background-color: #45a049;
+}
+
+.assignment-card .card:hover {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.assignmentInfoList {
+	list-style-type: disc !important;
+	padding-left: 1em !important;
+	margin-left: 1em;
+	text-align: justify;
+	font-family: revert;
+	font-size: small;
+}
+
+.assignmentInfoList li::marker {
+	color: red;
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toast-error {
+	background-color: #ff6666;
+    color: white;
+}
+
+.toast-success {
+	background-color: #25d366;
+	color: white;
+}
+
+.custom-toast-placement {
+	top: 60px;
+	right: 20px;
+}

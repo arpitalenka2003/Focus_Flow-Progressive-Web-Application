@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+		integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/fontawesome.min.css"/>
+	<link rel="stylesheet" th:href="@{/css/style.css}" />
+	<link rel="stylesheet" th:href="@{/css/all.css}" />
+	<link href='https://fonts.googleapis.com/css?family=Dongle' rel='stylesheet'>
+	<title>Focus Flow</title>
+</head>
+<body>
+	<div class="sidebar bg-primary">
+		<div class="row">
+			<div class="col-sm-12 mb-2"> 
+                <div class="card p-1 border-0 rounded-0">
+                    <div class="card-body p-0" style="background-color: lightgreen"> 
+						<p class="card-text mb-0 ml-1" style="font-size: 20px; font-family: 'Dongle'; margin-top: -7px;">TIME LEFT</p>
+                        <div id="timer" style="font-size: 3em; text-align: center; font-weight: 800;"></div>
+                    </div> 
+                </div> 
+            </div> 
+            <div class="col-sm-12"> 
+                <div class="card p-1 border-0 rounded-0">
+                    <div class="card-body p-0"> 
+                        <div class="booth"> 
+                            <video id="video" width="100%" height="100%" autoplay></video> 
+                        </div>
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+	</div>
+	<div class="content">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<p>Questions</p>
+					<input type='hidden' th:value="${duration}" id="assignment-duration" />
+					<form th:action="@{/student/assignment/submit-answer}" method="post">
+						<div class="question" th:each="u, itrStat : ${assignmentsList}">
+							<p th:text="${itrStat.index +1 +') ' + u.question}"></p>
+							<p class="questionContent d-none" th:text="${u.question}"></p>
+							<p class="markContent d-none" th:text="${u.mark}"></p>
+							<textarea name="answer[]" th:if="${#strings.isEmpty(u.mcq1)}"></textarea>				
+							<div th:if="${not #strings.isEmpty(u.mcq1)}" class="mb-2">
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" th:id="'mcq1_' + ${itrStat.index}" th:name="'option' + ${itrStat.index}" th:value="${u.mcq1}">
+									<label class="form-check-label" th:for="'mcq1_' + ${itrStat.index}" th:text="${u.mcq1}"></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" th:id="'mcq2_' + ${itrStat.index}" th:name="'option' + ${itrStat.index}" th:value="${u.mcq2}">
+									<label class="form-check-label" th:for="'mcq2_' + ${itrStat.index}" th:text="${u.mcq2}"></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" th:id="'mcq3_' + ${itrStat.index}" th:name="'option' + ${itrStat.index}" th:value="${u.mcq3}">
+									<label class="form-check-label" th:for="'mcq3_' + ${itrStat.index}" th:text="${u.mcq3}"></label>
+								</div>
+								<div class="form-check form-check-inline">
+									<input class="form-check-input" type="radio" th:id="'mcq4_' + ${itrStat.index}" th:name="'option' + ${itrStat.index}" th:value="${u.mcq4}">
+									<label class="form-check-label" th:for="'mcq4_' + ${itrStat.index}" th:text="${u.mcq4}"></label>
+								</div>
+							</div>
+						</div>
+						<button type="button" onclick="submitAnswer()">Submit</button>			
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script th:src="@{/js/jquery.min.js}"></script>
+	<script th:src="@{/js/questions.js}"></script>
+</body>
+</html>

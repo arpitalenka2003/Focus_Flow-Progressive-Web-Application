@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{student/base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Student - Dashboard</title>
+</head>
+<body>
+	<section>
+		<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalTitle" aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Edit Profile</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form th:action="@{/student/profile/edit}" method="post" enctype="multipart/form-data">
+							<input type="hidden" name="id" th:value="${session.user.id}"/>
+							<div class="row">
+								<div class="col-md-4 mb-4">
+									<div class="form-outline required">
+										<label class="form-label" for="fullName">Full Name</label>
+										<input type="text" id="fullName" name="fullName" required="required" class="form-control form-control-lg" th:value="${session.user.fullName}"/>
+									</div>
+								</div>
+								<div class="col-md-4 mb-4">
+									<div class="form-outline required">
+										<label class="form-label" for="username">User Name</label>
+										<input type="text" id="username" name="username" required="required" class="form-control form-control-lg" th:value="${session.user.username}"/>
+									</div>
+								</div>
+								<div class="col-md-4 mb-4">
+									<div class="form-outline required">
+										<label class="form-label" for="dummyName">Nick Name</label>
+										<input type="text" id="dummyName" name="dummyName" required="required" class="form-control form-control-lg" th:value="${session.user.dummyName}"/>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-6 mb-4">
+									<div class="form-outline">
+										<label class="form-label" for="phoneNo">Phone No</label>
+										<input type="text" id="phoneNo" name="phoneNo" class="form-control form-control-lg" th:value="${session.user.phoneNo}"/>
+									</div>
+								</div>
+								<div class="col-md-6 mb-4">
+									<div class="form-outline">
+										<label class="form-label" for="emailId">Email ID</label>
+										<input type="mail" id="emailId" name="email" class="form-control form-control-lg" th:value="${session.user.email}"/>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 mb-4">
+									<div class="form-outline">
+										<label class="form-label" for="profileImg">Image</label>
+										<input type="file" name="profileImg" class="form-control form-control-lg" accept="image/*">
+									</div>
+								</div>
+							</div>			
+							<div class="d-flex justify-content-end pt-3">
+								<input type="submit" name="submit" class="btn btn-primary btn-md ms-2" value="Update">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<style>
+			/* Adjustments for profile image */
+			.profile-img {
+				width: 150px;
+				height: 150px;
+				border-radius: 50%;
+			}
+		</style>
+		<div th:if="${session.user_msg}">
+			<script th:inline="javascript">
+				$(document).ready(function() {
+					toastr.options.positionClass = 'custom-toast-placement';
+					if ([[${session.user_msg.type}]] == "danger") {
+						toastr.error([[${session.user_msg.content}]]);
+					} else {
+						toastr.success([[${session.user_msg.content}]]);
+					}
+				});							
+			</script>
+			<span th:remove="${#session.removeAttribute('user_msg')}"></span>
+		</div>
+		<div class="container-fluid">
+			<div class="row d-flex justify-content-center">
+				<div class="col-md-10 mt-1 pt-1">
+					<div class="row z-depth-3" style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);">
+						<div class="col-sm-4 bg-info rounded-left">
+							<div class="card-block text-center text-white">
+								<img th:src="${session.userDto.profileImg == null} ? '/assets/img_avatar.png' : 'data:image/jpeg;base64,' + ${session.userDto.profileImg}" alt="Profile Image" class="profile-img mt-3">
+								<h2 class="font-wright-bold mt-4" th:text="${session.user.fullName}"></h2>
+								<p class="h6" th:text="${session.user.branch}"></p>
+								<p class="h6" th:text="${session.user.semester}"></p>
+							</div>
+						</div>
+						<div class="col-sm-8 bg-white rounded-right">
+							<a href="#" data-toggle="modal" data-target="#editProfileModal" ><i class="far fa-edit d-flex justify-content-end mt-3"></i></a>
+							<h3 class="mt-1 text-center">Information</h3>
+							<hr class="badge-primary mt-0 w-25">
+							<div class="row">
+								<div class="col-sm-6">
+									<p class="font-weight-bold">Email:</p>
+									<h6 class="text-muted" th:text="${session.user.email}"></h6>
+								</div>
+								<div class="col-sm-6">
+									<p class="font-weight-bold">Phone:</p>
+									<h6 class="text-muted" th:text="${session.user.phoneNo}"></h6>
+								</div>
+							</div>
+							<hr class="bg-primary">
+							<div class="row">
+								<div class="col-sm-6">
+									<p class="font-weight-bold">User name:</p>
+									<h6 class="text-muted" th:text="${session.user.username}"></h6>
+								</div>
+								<div class="col-sm-6">
+									<p class="font-weight-bold">Nick name:</p>
+									<h6 class="text-muted" th:text="${session.user.dummyName}"></h6>
+								</div>
+							</div>
+							<hr class="bg-primary">
+							<ul class="list-unstyled d-flex justify-content-center mt-4">
+								<li><a href="#"><i class="fa-brands fa-facebook px-3 h4" style="color:#1877F2"></i></a></li>
+								<li><a href="#"><i class="fa-brands fa-youtube px-3 h4" style="color:#FF0000"></i></a></li>
+								<li><a href="#"><i class="fa-brands fa-twitter px-3 h4" style="color:#1DA1F2"></i></a></li>
+								<li><a href="#"><i class="fa-brands fa-instagram px-3 h4" style="color:#405DE6"></i></a></li>
+								<li><a href="#"><i class="fa-brands fa-linkedin px-3 h4" style="color:#0077B5"></i></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

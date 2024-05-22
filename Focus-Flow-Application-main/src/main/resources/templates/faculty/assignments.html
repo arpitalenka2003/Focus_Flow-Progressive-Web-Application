@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{faculty/base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<section>
+		<div th:if="${session.assign_msg}">
+			<script th:inline="javascript">
+				$(document).ready(function() {
+					toastr.options.positionClass = 'custom-toast-placement';
+					if ([[${session.assign_msg.type}]] == "danger") {
+						toastr.error([[${session.assign_msg.content}]]);
+					} else {
+						toastr.success([[${session.assign_msg.content}]]);
+					}
+				});							
+			</script>
+			<span th:remove="${#session.removeAttribute('assign_msg')}"></span>
+		</div>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="modal fade" id="addAssignmentModalLong" tabindex="-1" role="dialog" aria-labelledby="addAssignmentModalLongTitle" aria-hidden="true">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="addAssignmentModal">Create Assessment</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<form th:object="${reqDto}">
+										<div class="row">
+											<div class="col-md-3 mb-3">
+												<div class="form-outline required">
+													<label class="form-label" for="branch">Branch</label>
+													<select class="form-control form-control-sm" onchange="updateBranch(this.value)" id="add_branch">
+														<option value="">Choose...</option>
+														<option value="Computer(CSE)">Computer(CSE)</option>
+														<option value="Mechanical">Mechanical</option>
+														<option value="ISE">ISE</option>
+														<option value="ECE">ECE</option>
+														<option value="Civil">Civil</option>
+														<option value="Automobile">Automobile</option>
+														<option value="Aeronautical">Aeronautical</option>
+													</select>
+												</div>
+											</div>
+											<div class="col-md-3 mb-3">
+												<div class="form-outline required">
+													<label class="form-label" for="semester">Semester</label>
+													<select class="form-control form-control-sm" onchange="updateSemester(this.value)" id="add_semester">
+														<option value="">Choose...</option>
+														<option value="SE-1">SE-1</option>
+														<option value="SE-2">SE-2</option>
+														<option value="SE-3">SE-3</option>
+														<option value="SE-4">SE-4</option>
+														<option value="SE-5">SE-5</option>
+														<option value="SE-6">SE-6</option>
+														<option value="SE-7">SE-7</option>
+														<option value="SE-8">SE-8</option>
+													</select>
+												</div>
+											</div>
+											<div class="col-md-3 mb-3">
+												<div class="form-outline required">
+													<label class="form-label" for="subject">Subject</label>
+													<input class="form-control form-control-sm" id="add_subject" type="text" placeholder="Subject" onchange="updateSubject(this.value)" >
+												</div>
+											</div>
+											<div class="col-md-3 mb-3">
+												<div class="form-outline required">
+													<label class="form-label" for="duration">Duration (In Minute)</label>
+													<input class="form-control form-control-sm" id="add_duration" type="text" placeholder="Duation" onchange="updateDuration(this.value)" >
+												</div>
+											</div>
+										</div >
+										<div class="row">
+											<div class="col-md-12 mb-12">
+												<div class="form-outline required">
+													<label class="form-label" for="title">Title</label>
+													<input class="form-control form-control-sm" id="add_title" type="text" placeholder="Add Title" onchange="updateTitle(this.value)" >
+												</div>
+											</div>
+										</div>
+										<div id="assignmentsContainer">
+											<!-- Assignment input fields will be dynamically added here -->
+										</div>
+										<div class="d-flex justify-content-end pt-3">								
+											<button type="button" onclick="addAssignment()" class="btn btn-success btn-sm mr-2">Add Assessment</button>
+											<button type="button" onclick="submitForm()" class="btn btn-success btn-sm invisible" id="save-assignment">Save Assessment</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="editAssignModalLong" tabindex="-1" role="dialog" aria-labelledby="editAssignModalLongTitle" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="editAssignModal">Edit Question</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<form th:action="@{'/faculty/assignment/edit/'+${currentPage}}" method="post">
+										<input type="hidden" id="assigneditid" name="id"/>
+										<div class="row">
+											<div class="col-md-12 mb-12">
+												<div class="form-outline required">
+													<label class="form-label" for="assignedittitle">Title</label>
+													<input class="form-control form-control-sm" id="assignedittitle" name="title" type="text" placeholder="Add Title" required>
+												</div>
+											</div>
+										</div>	
+										<div class="row">
+											<div class="col-md-6 mb-6">
+												<div class="form-outline required">
+													<label class="form-label" for="assigneditduration">Duration (In Minute)</label>
+													<input class="form-control form-control-sm" id="assigneditduration" name="duration" type="text" placeholder="Duation" required>
+												</div>
+											</div>
+											<div class="col-md-6 mb-6">
+												<div class="form-outline required">
+													<label class="form-label" for="assigneditmark">Mark</label>
+													<input class="form-control form-control-sm" id="assigneditmark" name="mark" type="text" placeholder="Add Title" required>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12 mb-12">
+												<div class="form-outline required">
+													<label class="form-label" for="assigneditquestion">Question</label>
+													<textarea id="assigneditquestion" name="question" placeholder="Question" required class="form-control form-control-sm" style="height: 100px"></textarea>
+												</div>
+											</div>
+										</div>							
+										<label class="form-label">Multiple Choice Options:</label>
+										<br>
+										<div class="row">
+											<div class="col-md-6 mb-6">
+												<div class="form-outline required">
+													<label class="form-label" for="assigneditmcq1">Option 1</label>
+													<input type="text" id="assigneditmcq1" name="mcq1" placeholder="MCQ 1" class="form-control form-control-sm">
+												</div>
+											</div>
+											<div class="col-md-6 mb-6">
+												<div class="form-outline required">
+													<label class="form-label" for="assigneditmcq2">Option 2</label>
+													<input type="text" id="assigneditmcq2" name="mcq2" placeholder="MCQ 2" class="form-control form-control-sm">
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6 mb-6">
+												<div class="form-outline required">
+													<label class="form-label" for="assigneditmcq3">Option 3</label>
+													<input type="text" id="assigneditmcq3" name="mcq3" placeholder="MCQ 3" class="form-control form-control-sm">
+												</div>
+											</div>
+											<div class="col-md-6 mb-6">
+												<div class="form-outline required">
+													<label class="form-label" for="assigneditmcq4">Option 4</label>
+													<input type="text" id="assigneditmcq4" name="mcq4" placeholder="MCQ 4" class="form-control form-control-sm">
+												</div>
+											</div>
+										</div>
+										<div class="d-flex justify-content-end pt-3">
+											<input type="submit" name="submit" class="btn btn-success btn-lg ms-2" value="Update">
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class ="card">
+						<div class="card-body">
+							<div class="assignment-filter-section">
+								<form th:action="@{'/faculty/assignment/filter-view/'+${currentPage}}" method="post" th:object="${assignmentFilterDto}">
+									<div class="row">
+										<div class="col-md-4 mb-4"></div>
+										<div class="col-md-2 mb-4">
+											<div class="form-outline mb-1">
+											<select class="form-control form-control-sm" name="branch" id="branch">
+												<option value="">Branch</option>
+												<option value="Computer(CSE)">Computer(CSE)</option>
+												<option value="Mechanical">Mechanical</option>
+												<option value="ISE">ISE</option>
+												<option value="ECE">ECE</option>
+												<option value="Civil">Civil</option>
+												<option value="Automobile">Automobile</option>
+												<option value="Aeronautical">Aeronautical</option>
+											</select>
+											</div>
+										</div>
+										<div class="col-md-2 mb-4">
+											<div class="form-outline mb-1">
+											<select class="form-control form-control-sm" name="semester" id="semester">
+												<option value="">Semester</option>
+												<option value="SE-1">SE-1</option>
+												<option value="SE-2">SE-2</option>
+												<option value="SE-3">SE-3</option>
+												<option value="SE-4">SE-4</option>
+												<option value="SE-5">SE-5</option>
+												<option value="SE-6">SE-6</option>
+												<option value="SE-7">SE-7</option>
+												<option value="SE-8">SE-8</option>
+											</select>
+											</div>
+										</div>
+										<div class="col-md-2 mb-4">
+											<div class="form-outline mb-1">
+												<input class="form-control form-control-sm" type="text" placeholder="Subject" name="course" id="course">
+											</div>
+										</div>
+										<div class="col-md-2 mb-4">
+											<div class="form-outline mb-1">
+												<input type="submit" name="submit" class="btn btn-info btn-sm ms-2" value="Apply Filter">
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>			
+							<table class="table">
+								<thead>
+									<tr>
+										<th scope="col">Id</th>
+										<th scope="col">Title</th>
+										<th scope="col">Question</th>
+										<th scope="col">Mark</th>
+										<th scope="col">Option 1</th>
+										<th scope="col">Option 2</th>
+										<th scope="col">Option 3</th>
+										<th scope="col">Option 4</th>
+										<th scope="col"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="u : ${assignments}">
+										<th scope="row" th:text="${u.id}">1</th>
+										<td th:text="${u.title}"></td>
+										<td th:text="${u.question}"></td>
+										<td th:text="${u.mark}"></td>
+										<td th:text="${u.mcq1}"></td>
+										<td th:text="${u.mcq2}"></td>
+										<td th:text="${u.mcq3}"></td>
+										<td th:text="${u.mcq4}"></td>
+										<td>
+											<a href="#" class="mr-3" data-toggle="modal" data-target="#editAssignModalLong" th:attr="data-id=${u.id}, data-title=${u.title}, data-duration=${u.duration}, data-mark=${u.mark}, data-question=${u.question}, data-mcq1=${u.mcq1}, data-mcq2=${u.mcq2}, data-mcq3=${u.mcq3}, data-mcq4=${u.mcq4}"><i class="fa-solid fa-pen-to-square" style="color:blue"></i></a>
+											<a th:href="@{'/faculty/assignment/delete/'+${currentPage}+'/'+${u.id}}" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa-solid fa-trash" style="color:#d11a2a"></i></a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- pagination part -->
+							<nav aria-label="Page navigation example" th:classappend="${totalPages==0?'d-none':''}">
+								<ul class="pagination">
+									<li th:if="${currentPage != 0}" class="page-item">
+										<a th:href="@{'/faculty/assignment/view/'+${currentPage-1}}" class="page-link" href="#" aria-label="Previous">
+											<span aria-hidden="true">&laquo;</span>
+											<span class="sr-only">Previous</span>
+										</a>
+									</li>
+									
+									<li th:classappend="${currentPage==i-1?'active':''}" th:each="i : ${#numbers.sequence(1,totalPages)}" class="page-item">
+										<a th:href="@{'/faculty/assignment/view/'+${i-1}}" class="page-link" href="#"><span th:text="${i}"></span></a>
+									</li>
+									
+									<li th:if="${currentPage+1 != totalPages}" class="page-item">
+										<a th:href="@{'/faculty/assignment/view/'+${currentPage+1}}" class="page-link" href="#" aria-label="Next">
+											<span aria-hidden="true">&raquo;</span>
+											<span class="sr-only">Next</span>
+										</a>
+									</li>
+								</ul>
+							</nav>
+							<div>
+								<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#addAssignmentModalLong">Add New Assessment</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>	
+</body>
+</html>

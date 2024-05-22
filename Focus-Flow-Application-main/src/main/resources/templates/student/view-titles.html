@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{student/base::layout(~{::section})}">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+</head>
+
+<body>
+	<section>
+		<div th:if="${session.assessment_result}">
+			<script th:inline="javascript">
+				$(document).ready(function() {
+					toastr.options.positionClass = 'custom-toast-placement';
+					if ([[${session.assessment_result.type}]] == "danger") {
+						toastr.error([[${session.assessment_result.content}]]);
+					} else {
+						toastr.success([[${session.assessment_result.content}]]);
+					}
+				});
+			</script>
+			<span th:remove="${#session.removeAttribute('assessment_result')}"></span>
+		</div>
+		<div class="container-fluid">
+			<div class="modal fade" id="showAssignModalParent" tabindex="-1" role="dialog"
+				aria-labelledby="showAssignModalParentTitle" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="showAssignModalTitle"></h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div>
+								<ul class="assignmentInfoList">
+									<li>This assessment requires access to the fully functional webcamera</li>
+									<li>Make sure that your face is visible within the webcamera frame</li>
+									<li>This is a timed assessment. Please make sure you are not interupted during the
+										test, as the timer cannot be paused once started.</li>
+									<li>Please ensure you have a stable internet connection.</li>
+									<li>Please don't click back or refresh. It will auto submit answers.</li>
+								</ul>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-secondary btn-sm ms-2" data-dismiss="modal">Close</button>
+							<button class="btn btn-primary btn-sm ms-2" onclick="startAssignment()">Start</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3 mb-3 assignment-card" th:each="u : ${assignments}" data-toggle="modal"
+					th:data-target="${u.completionStatus == 'Completed' ? '#' : '#showAssignModalParent'}">
+					<div class="card">
+						<h5 class="card-header text-center" id="assignmentTitle" th:text="${u.title}"></h5>
+						<div class="card-body">
+							<p class="card-text">This assessment has <span th:text="${u.mcq}"></span> multiple choice
+								question<span th:text="${u.mcq == '1' ? '' : 's'}"></span> and <span th:text="${u.noneMcq}"></span> normal question<span th:text="${u.noneMcq == '1' ? '' : 's'}"></span>.</p>
+							<p class="card-text"><i class="fa-solid fa-clock" style="color: #32C766;"></i>&nbsp; <span
+									class="card-text" th:text="${u.duration}"></span> Minutes</p>
+							<p class="card-text"><span style="font-weight: 800;">Total Mark : </span><span
+									class="card-text d-inline-block" th:text="${u.totalMark}"></span></p>
+							<p class="card-text" th:classappend="${u.completionStatus == 'Completed'} ? '' : 'd-none'">
+								<span style="font-weight: 800;">Mark Scored : </span>
+								<span class="card-text d-inline-block"
+									th:text="${u.markSecured == '' ? 'Evaluation Pending' : u.markSecured}"></span>
+							</p>
+							<p class="card-text"><span style="font-weight: 800;">Status : </span><span
+									class="card-text d-inline-block" th:text="${u.completionStatus}"></span></p>
+						</div>
+						<div class="text-center">
+							<a href="#" class="btn btn-primary col-12 border-0 rounded-0 stretched-link">View
+								Assessment</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+
+</html>
